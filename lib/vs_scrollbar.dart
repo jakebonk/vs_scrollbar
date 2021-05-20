@@ -23,9 +23,9 @@ class VsScrollbarStyle {
 
   const VsScrollbarStyle(
       {this.radius = _kScrollbarRadius,
-      this.thickness = _kScrollbarThickness,
-      this.hoverThickness = _kScrollbarThicknessWithTrack,
-      this.color});
+        this.thickness = _kScrollbarThickness,
+        this.hoverThickness = _kScrollbarThicknessWithTrack,
+        this.color});
 }
 
 const VsScrollbarStyle _kScrollbarStyle = const VsScrollbarStyle();
@@ -137,18 +137,18 @@ class _MaterialScrollbar extends RawScrollbar {
     Radius? radius,
     ScrollNotificationPredicate? notificationPredicate,
   }) : super(
-          key: key,
-          child: child,
-          controller: controller,
-          isAlwaysShown: isAlwaysShown,
-          thickness: thickness,
-          radius: radius,
-          fadeDuration: scrollbarFadeDuration ?? _kScrollbarFadeDuration,
-          timeToFade: scrollbarTimeToFade ?? _kScrollbarTimeToFade,
-          pressDuration: Duration.zero,
-          notificationPredicate:
-              notificationPredicate ?? defaultScrollNotificationPredicate,
-        );
+    key: key,
+    child: child,
+    controller: controller,
+    isAlwaysShown: isAlwaysShown,
+    thickness: thickness,
+    radius: radius,
+    fadeDuration: scrollbarFadeDuration ?? _kScrollbarFadeDuration,
+    timeToFade: scrollbarTimeToFade ?? _kScrollbarTimeToFade,
+    pressDuration: Duration.zero,
+    notificationPredicate:
+    notificationPredicate ?? defaultScrollNotificationPredicate,
+  );
   final Duration? scrollbarTimeToFade;
   final Duration? scrollbarFadeDuration;
 
@@ -162,7 +162,7 @@ class _MaterialScrollbar extends RawScrollbar {
 
 class _MaterialScrollbarState extends RawScrollbarState<_MaterialScrollbar> {
   late AnimationController _hoverAnimationController;
-  bool _dragIsActive = false;
+  bool _dragIsActive = true;
   bool _hoverIsActive = false;
   late ColorScheme _colorScheme;
   late ScrollbarThemeData _scrollbarTheme;
@@ -177,9 +177,9 @@ class _MaterialScrollbarState extends RawScrollbarState<_MaterialScrollbar> {
       widget.showTrackOnHover ?? _scrollbarTheme.showTrackOnHover ?? false;
 
   Set<MaterialState> get _states => <MaterialState>{
-        if (_dragIsActive) MaterialState.dragged,
-        if (_hoverIsActive) MaterialState.hovered,
-      };
+    if (_dragIsActive) MaterialState.dragged,
+    if (_hoverIsActive) MaterialState.hovered,
+  };
 
   MaterialStateProperty<Color> get _thumbColor {
     final Color onSurface = widget.color ?? _colorScheme.onSurface;
@@ -206,6 +206,8 @@ class _MaterialScrollbarState extends RawScrollbarState<_MaterialScrollbar> {
       )!;
     });
   }
+
+
 
   MaterialStateProperty<Color> get _trackColor {
     final Color onSurface = widget.color ?? _colorScheme.onSurface;
@@ -244,6 +246,7 @@ class _MaterialScrollbarState extends RawScrollbarState<_MaterialScrollbar> {
     });
   }
 
+
   @override
   void initState() {
     super.initState();
@@ -278,6 +281,7 @@ class _MaterialScrollbarState extends RawScrollbarState<_MaterialScrollbar> {
 
   @override
   void updateScrollbarPainter() {
+
     scrollbarPainter
       ..color = _thumbColor.resolve(_states)
       ..trackColor = _trackColor.resolve(_states)
@@ -291,7 +295,7 @@ class _MaterialScrollbarState extends RawScrollbarState<_MaterialScrollbar> {
           (_useAndroidScrollbar ? 0.0 : _kScrollbarMargin)
       ..mainAxisMargin = _scrollbarTheme.mainAxisMargin ?? 0.0
       ..minLength = _scrollbarTheme.minThumbLength ?? _kScrollbarMinLength
-      ..padding = MediaQuery.of(context).padding;
+      ..padding = EdgeInsets.all(0);
   }
 
   @override
@@ -314,7 +318,7 @@ class _MaterialScrollbarState extends RawScrollbarState<_MaterialScrollbar> {
   void handleHover(PointerHoverEvent event) {
     super.handleHover(event);
     // Check if the position of the pointer falls over the painted VsScrollbar
-    if (isPointerOverScrollbar(event.position)) {
+    if (isPointerOverScrollbar(event.position,PointerDeviceKind.mouse)) {
       // Pointer is hovering over the VsScrollbar
       setState(() {
         _hoverIsActive = true;
